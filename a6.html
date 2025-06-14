@@ -16,23 +16,49 @@
   <div class="tab-content active">
     <h2>1. 안드로이드 버전 확인</h2>
     <p>설정 &gt; 태블릿 정보 &gt; 소프트웨어 정보로 들어가 안드로이드 버전을 확인해 주세요.</p>
-    <img class="slide-image" src="https://raw.githubusercontent.com/skyhigh79/aa/main/ex.png" alt="슬라이드 이미지" onclick="openModal('a6', 0, currentSlides[0])">
-    <div class="slide-controls">
-      <button onclick="changeSlide(0, -1)">이전</button>
-      <button onclick="changeSlide(0, 1)">다음</button>
+    
+    <!-- 세로 모드: 스크롤 방식 -->
+    <div class="portrait-mode">
+      <div class="scroll-images" id="scrollImages0">
+        <!-- 이미지들이 JavaScript로 동적 생성됩니다 -->
+      </div>
     </div>
-    <div class="slide-counter" id="counter0">1 / 10</div>
+    
+    <!-- 가로 모드: 슬라이드 방식 -->
+    <div class="landscape-mode">
+      <div class="slide-container">
+        <img class="slide-image" src="https://raw.githubusercontent.com/skyhigh79/aa/main/ex.png" alt="슬라이드 이미지" onclick="openModal('a6', 0, currentSlides[0])" id="slideImage0">
+        <div class="slide-controls">
+          <button onclick="changeSlide(0, -1)">이전</button>
+          <button onclick="changeSlide(0, 1)">다음</button>
+        </div>
+        <div class="slide-counter" id="counter0">1 / 24</div>
+      </div>
+    </div>
   </div>
 
   <div class="tab-content">
     <h2>2. 밀크T 런처 설치</h2>
     <p>크롬을 열고 안내된 주소를 입력하여 설치 파일을 다운로드한 뒤 실행해 주세요.</p>
-    <img class="slide-image" src="https://raw.githubusercontent.com/skyhigh79/aa/main/ex.png" alt="슬라이드 이미지" onclick="openModal('a6', 1, currentSlides[1])">
-    <div class="slide-controls">
-      <button onclick="changeSlide(1, -1)">이전</button>
-      <button onclick="changeSlide(1, 1)">다음</button>
+    
+    <!-- 세로 모드: 스크롤 방식 -->
+    <div class="portrait-mode">
+      <div class="scroll-images" id="scrollImages1">
+        <!-- 이미지들이 JavaScript로 동적 생성됩니다 -->
+      </div>
     </div>
-    <div class="slide-counter" id="counter1">1 / 10</div>
+    
+    <!-- 가로 모드: 슬라이드 방식 -->
+    <div class="landscape-mode">
+      <div class="slide-container">
+        <img class="slide-image" src="https://raw.githubusercontent.com/skyhigh79/aa/main/ex.png" alt="슬라이드 이미지" onclick="openModal('a6', 1, currentSlides[1])" id="slideImage1">
+        <div class="slide-controls">
+          <button onclick="changeSlide(1, -1)">이전</button>
+          <button onclick="changeSlide(1, 1)">다음</button>
+        </div>
+        <div class="slide-counter" id="counter1">1 / 24</div>
+      </div>
+    </div>
   </div>
 
   <div id="imageModal" class="modal">
@@ -46,7 +72,43 @@
     const tabs = document.querySelectorAll(".tab");
     const contents = document.querySelectorAll(".tab-content");
     const currentSlides = [1, 1];
-    const totalSlides = 10;
+    const totalSlides = 24;
+
+    // 페이지 로드 시 스크롤 이미지 생성
+    window.addEventListener('load', function() {
+      generateScrollImages();
+    });
+
+    // 화면 회전 시 스크롤 이미지 재생성
+    window.addEventListener('orientationchange', function() {
+      setTimeout(generateScrollImages, 100);
+    });
+
+    function generateScrollImages() {
+      for (let tabIndex = 0; tabIndex < 2; tabIndex++) {
+        const container = document.getElementById(`scrollImages${tabIndex}`);
+        container.innerHTML = '';
+        
+        for (let i = 1; i <= totalSlides; i++) {
+          const imageWrapper = document.createElement('div');
+          imageWrapper.className = 'image-wrapper';
+          
+          const numberBadge = document.createElement('div');
+          numberBadge.className = 'image-number';
+          numberBadge.textContent = `${i} / ${totalSlides}`;
+          
+          const img = document.createElement('img');
+          img.src = getImageSrc('a6', tabIndex, i);
+          img.alt = `단계 ${i}`;
+          img.onclick = () => openModal('a6', tabIndex, i);
+          img.className = 'scroll-image';
+          
+          imageWrapper.appendChild(numberBadge);
+          imageWrapper.appendChild(img);
+          container.appendChild(imageWrapper);
+        }
+      }
+    }
 
     function showTab(index) {
       tabs.forEach((tab, i) => {
@@ -59,6 +121,9 @@
       currentSlides[tabIndex] += direction;
       if (currentSlides[tabIndex] < 1) currentSlides[tabIndex] = 1;
       if (currentSlides[tabIndex] > totalSlides) currentSlides[tabIndex] = totalSlides;
+      
+      // 슬라이드 이미지 업데이트
+      document.getElementById(`slideImage${tabIndex}`).src = getImageSrc('a6', tabIndex, currentSlides[tabIndex]);
       document.getElementById(`counter${tabIndex}`).innerText = `${currentSlides[tabIndex]} / ${totalSlides}`;
     }
 
@@ -86,7 +151,11 @@
     }
 
     function getImageSrc(device, tabIndex, slideIndex) {
+      // 테스트용 이미지 - 실제 이미지 경로로 변경하세요
       return `https://raw.githubusercontent.com/skyhigh79/aa/main/ex.png`;
+      
+      // 실제 이미지 경로 예시:
+      // return `images/${device}/tab${tabIndex}/step${slideIndex}.png`;
     }
   </script>
 
