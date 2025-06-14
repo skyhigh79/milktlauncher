@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>A6 밀크T 런처 설치</title>
+  <link rel="stylesheet" href="s6_a6.css">
+</head>
+<body>
+
+  <div class="mobile-tab-menu">
+    <button class="tab active" onclick="showTab(0)">1. 안드로이드 버전 확인</button>
+    <button class="tab" onclick="showTab(1)">2. 런처 설치</button>
+  </div>
+
+  <div class="tab-content active">
+    <h2>1. 안드로이드 버전 확인</h2>
+    <p>설정 &gt; 태블릿 정보 &gt; 소프트웨어 정보로 들어가 안드로이드 버전을 확인해 주세요.</p>
+    <img class="slide-image" src="https://raw.githubusercontent.com/skyhigh79/aa/main/ex.png" alt="슬라이드 이미지" onclick="openModal('a6', 0, currentSlides[0])">
+    <div class="slide-controls">
+      <button onclick="changeSlide(0, -1)">이전</button>
+      <button onclick="changeSlide(0, 1)">다음</button>
+    </div>
+    <div class="slide-counter" id="counter0">1 / 10</div>
+  </div>
+
+  <div class="tab-content">
+    <h2>2. 밀크T 런처 설치</h2>
+    <p>크롬을 열고 안내된 주소를 입력하여 설치 파일을 다운로드한 뒤 실행해 주세요.</p>
+    <img class="slide-image" src="https://raw.githubusercontent.com/skyhigh79/aa/main/ex.png" alt="슬라이드 이미지" onclick="openModal('a6', 1, currentSlides[1])">
+    <div class="slide-controls">
+      <button onclick="changeSlide(1, -1)">이전</button>
+      <button onclick="changeSlide(1, 1)">다음</button>
+    </div>
+    <div class="slide-counter" id="counter1">1 / 10</div>
+  </div>
+
+  <div id="imageModal" class="modal">
+    <span class="close-btn" onclick="closeModal()">&times;</span>
+    <button class="modal-nav prev" onclick="navigateModal(-1)">&#10094;</button>
+    <img id="modalImage" class="modal-content" />
+    <button class="modal-nav next" onclick="navigateModal(1)">&#10095;</button>
+  </div>
+
+  <script>
+    const tabs = document.querySelectorAll(".tab");
+    const contents = document.querySelectorAll(".tab-content");
+    const currentSlides = [1, 1];
+    const totalSlides = 10;
+
+    function showTab(index) {
+      tabs.forEach((tab, i) => {
+        tab.classList.toggle("active", i === index);
+        contents[i].classList.toggle("active", i === index);
+      });
+    }
+
+    function changeSlide(tabIndex, direction) {
+      currentSlides[tabIndex] += direction;
+      if (currentSlides[tabIndex] < 1) currentSlides[tabIndex] = 1;
+      if (currentSlides[tabIndex] > totalSlides) currentSlides[tabIndex] = totalSlides;
+      document.getElementById(`counter${tabIndex}`).innerText = `${currentSlides[tabIndex]} / ${totalSlides}`;
+    }
+
+    let modalDevice = 'a6';
+    let modalTabIndex = 0;
+    let modalSlideIndex = 1;
+
+    function openModal(device, tabIndex, slideIndex) {
+      modalDevice = device;
+      modalTabIndex = tabIndex;
+      modalSlideIndex = slideIndex;
+      document.getElementById("modalImage").src = getImageSrc(device, tabIndex, slideIndex);
+      document.getElementById("imageModal").style.display = "flex";
+    }
+
+    function closeModal() {
+      document.getElementById("imageModal").style.display = "none";
+    }
+
+    function navigateModal(direction) {
+      modalSlideIndex += direction;
+      if (modalSlideIndex < 1) modalSlideIndex = 1;
+      if (modalSlideIndex > totalSlides) modalSlideIndex = totalSlides;
+      document.getElementById("modalImage").src = getImageSrc(modalDevice, modalTabIndex, modalSlideIndex);
+    }
+
+    function getImageSrc(device, tabIndex, slideIndex) {
+      return `https://raw.githubusercontent.com/skyhigh79/aa/main/ex.png`;
+    }
+  </script>
+
+</body>
+</html>
