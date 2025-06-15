@@ -8,6 +8,12 @@
 </head>
 <body>
 
+  <!-- 단계 네비게이션 -->
+  <div class="step-navigation">
+    <a href="index.html" class="step-nav-btn" id="prevStepBtn">← 기종 선택으로</a>
+    <a href="#" class="step-nav-btn disabled" id="nextStepBtn">완료</a>
+  </div>
+
   <div class="mobile-tab-menu">
     <button class="tab active" onclick="showTab(0)">1. 안드로이드 버전 확인</button>
     <button class="tab" onclick="showTab(1)">2. 런처 설치</button>
@@ -29,10 +35,10 @@
       <div class="slide-container">
         <img class="slide-image" src="https://raw.githubusercontent.com/skyhigh79/aa/main/ex.png" alt="슬라이드 이미지" onclick="openModal('a6', 0, currentSlides[0])" id="slideImage0">
         <div class="slide-controls">
-          <button onclick="changeSlide(0, -1)">이전</button>
-          <button onclick="changeSlide(0, 1)">다음</button>
+          <button class="arrow-btn" onclick="changeSlide(0, -1)">&#8249;</button>
+          <div class="slide-counter" id="counter0">1 / 24</div>
+          <button class="arrow-btn" onclick="changeSlide(0, 1)">&#8250;</button>
         </div>
-        <div class="slide-counter" id="counter0">1 / 24</div>
       </div>
     </div>
   </div>
@@ -53,10 +59,10 @@
       <div class="slide-container">
         <img class="slide-image" src="https://raw.githubusercontent.com/skyhigh79/aa/main/ex.png" alt="슬라이드 이미지" onclick="openModal('a6', 1, currentSlides[1])" id="slideImage1">
         <div class="slide-controls">
-          <button onclick="changeSlide(1, -1)">이전</button>
-          <button onclick="changeSlide(1, 1)">다음</button>
+          <button class="arrow-btn" onclick="changeSlide(1, -1)">&#8249;</button>
+          <div class="slide-counter" id="counter1">1 / 24</div>
+          <button class="arrow-btn" onclick="changeSlide(1, 1)">&#8250;</button>
         </div>
-        <div class="slide-counter" id="counter1">1 / 24</div>
       </div>
     </div>
   </div>
@@ -74,9 +80,10 @@
     const currentSlides = [1, 1];
     const totalSlides = 24;
 
-    // 페이지 로드 시 스크롤 이미지 생성
+    // 페이지 로드 시 스크롤 이미지 생성 및 네비게이션 초기화
     window.addEventListener('load', function() {
       generateScrollImages();
+      updateStepNavigation(0);
     });
 
     // 화면 회전 시 스크롤 이미지 재생성
@@ -115,6 +122,41 @@
         tab.classList.toggle("active", i === index);
         contents[i].classList.toggle("active", i === index);
       });
+      
+      // 단계 네비게이션 버튼 업데이트
+      updateStepNavigation(index);
+    }
+
+    function updateStepNavigation(currentTab) {
+      const prevBtn = document.getElementById('prevStepBtn');
+      const nextBtn = document.getElementById('nextStepBtn');
+      
+      if (currentTab === 0) {
+        // 1. 안드로이드 버전 확인 탭
+        prevBtn.textContent = '← 기종 선택으로';
+        prevBtn.href = 'index.html';
+        prevBtn.classList.remove('disabled');
+        prevBtn.onclick = null;
+        
+        nextBtn.textContent = '다음 단계로 →';
+        nextBtn.href = '#';
+        nextBtn.classList.remove('disabled');
+        nextBtn.onclick = () => showTab(1);
+      } else {
+        // 2. 런처 설치 탭
+        prevBtn.textContent = '← 이전 단계로';
+        prevBtn.href = '#';
+        prevBtn.classList.remove('disabled');
+        prevBtn.onclick = (e) => {
+          e.preventDefault();
+          showTab(0);
+        };
+        
+        nextBtn.textContent = '완료';
+        nextBtn.href = '#';
+        nextBtn.classList.add('disabled');
+        nextBtn.onclick = null;
+      }
     }
 
     function changeSlide(tabIndex, direction) {
